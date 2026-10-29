@@ -1,0 +1,1 @@
+use axum::{http::Request, middleware::Next, response::Response}; pub async fn audit_middleware<B>(req: Request<B>, next: Next<B>) -> Response where B: std::fmt::Debug { let path = req.uri().path().to_owned(); let res = next.run(req).await; tracing::info!(audit=true, path=%path, status=%res.status(), "request"); res }

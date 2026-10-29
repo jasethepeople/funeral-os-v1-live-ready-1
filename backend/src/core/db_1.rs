@@ -1,0 +1,1 @@
+use sqlx::PgPool; pub async fn init_pool() -> anyhow::Result<PgPool> { let url = std::env::var("DATABASE_URL").expect("DATABASE_URL"); Ok(PgPool::connect(&url).await?) }

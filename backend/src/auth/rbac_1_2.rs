@@ -1,0 +1,1 @@
+use axum::{http::Request, middleware::Next, response::Response}; pub async fn rbac_middleware<B>(req: Request<B>, next: Next<B>) -> Result<Response, axum::http::StatusCode> { Ok(next.run(req).await) }

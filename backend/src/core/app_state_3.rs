@@ -1,0 +1,7 @@
+use sqlx::PgPool;
+use async_nats::jetstream;
+#[derive(Clone)]
+pub struct AppState {
+    pub db: PgPool,
+    pub nats: jetstream::Context,
+}

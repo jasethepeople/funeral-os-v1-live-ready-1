@@ -1,0 +1,22 @@
+
+services:
+  api:
+    build: ../backend
+    environment:
+      DATABASE_URL: postgres://funeral:funeral@db:5432/funeralos?sslmode=require
+      NATS_URL: nats://nats:4222
+      RUST_LOG: info
+    ports: ["8080:8080"]
+    depends_on: [db, nats]
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: funeral
+      POSTGRES_PASSWORD: funeral
+      POSTGRES_DB: funeralos
+    volumes: [pgdata:/var/lib/postgresql/data]
+  nats:
+    image: nats:2.10-alpine
+    command: ["-js"]
+volumes:
+  pgdata:

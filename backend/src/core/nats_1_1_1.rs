@@ -1,0 +1,1 @@
+use async_nats::jetstream; pub async fn init() -> anyhow::Result<jetstream::Context> { let c = async_nats::connect(std::env::var("NATS_URL").unwrap_or("nats://localhost:4222".into())).await?; Ok(jetstream::new(c)) }

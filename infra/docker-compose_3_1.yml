@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: funeral
+      POSTGRES_PASSWORD: funeral
+      POSTGRES_DB: funeralos
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+  nats:
+    image: nats:2.10-alpine
+    command: ["-js", "-m", "8222"]
+    ports: ["4222:4222","8222:8222"]
+  api:
+    build: ../backend
+    environment:
+      DATABASE_URL: postgres://funeral:funeral@db:5432/funeralos
+      NATS_URL: nats://nats:4222
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production-32-chars-min-required}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE=}
+      RUST_LOG: info
+      ENV: development
+    ports: ["8080:8080"]
+    depends_on: [db, nats]
+  frontend:
+    build: ../frontend
+    ports: ["3000:3000"]
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+    depends_on: [api]
+volumes:
+  pgdata:
